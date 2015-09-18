@@ -7,31 +7,32 @@ use Chalcedonyt\QueryBuilderTemplate\Scopes\AbstractScope;
 
 class {{$classname}} extends AbstractScope
 {
+@if (count($parameters))
+@foreach( $parameters as $param )
+    /**
+     * All public properties will be stored in a serialized form
+     * @var {{$param['class']}}
+     */
+     public ${{camel_case($param['name'])}};
+
+@endforeach
+@endif
     /**
      * @var Array tables that are used by this query.
      */
     protected $tables = [];
 
-@if (count($parameters))
-@foreach( $parameters as $param)
     /**
-    * @var {{$param['class']}}
-    */
-    protected ${{camel_case($param['name'])}};
-
-@endforeach
-@endif
-    /**
-    *
+     *
 @if (!count($parameters))
-    * Set properties here for a parameterized scope.
+     * Set properties here for a parameterized scope.
 @else
 @foreach( $parameters as $param)
-    *  @param {{$param['class']}} ${{camel_case($param['name'])}}
+     *  @param {{$param['class']}} ${{camel_case($param['name'])}}
 @endforeach
 @endif
-    *
-    */
+     *
+     */
     public function __construct({{$parameter_string}})
     {
 @if (count($parameters))

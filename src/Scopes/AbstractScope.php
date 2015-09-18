@@ -57,5 +57,16 @@ abstract class AbstractScope implements ScopeInterface
     {
         return $this -> tables;
     }
+
+    /**
+     * To translate the scope's public properties into an array
+     * @return Array of public properties of a scope
+     */
+    public function toArray()
+    {
+        $public_properties = call_user_func('get_object_vars', $this);
+        $data = [ get_class($this) => $public_properties ];
+        return json_decode( $data, true );
+    }
 }
 ?>
