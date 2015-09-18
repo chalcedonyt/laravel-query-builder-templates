@@ -13,7 +13,7 @@ use DummyTemplates\PostTemplateFactory;
 use Illuminate\FileSystem\Filesystem;
 use Illuminate\FileSystem\ClassFinder;
 
-class QueryBuilderTemplateTest extends TestCase
+class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
 {
 
     public function setUp()
