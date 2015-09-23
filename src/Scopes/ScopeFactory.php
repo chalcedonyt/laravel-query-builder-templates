@@ -30,8 +30,8 @@ class ScopeFactory
 	public function create()
 	{
 		$scope = new \ReflectionClass( $this -> className );
-		$scope -> newInstanceArgs( $this -> arguments );
-		return $scope;
+		$new_scope = $scope -> newInstanceArgs( $this -> arguments );
+		return $new_scope;
 	}
 }
 ?>

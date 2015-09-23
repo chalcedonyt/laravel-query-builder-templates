@@ -14,7 +14,7 @@ class PostIsMaxDaysOldScope extends AbstractScope
     /**
     * @var
     */
-    protected $daysOld;
+    public $daysOld;
 
     /**
     *

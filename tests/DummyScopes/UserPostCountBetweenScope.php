@@ -14,12 +14,12 @@ class UserPostCountBetweenScope extends AbstractScope
     /**
     * @var
     */
-    protected $countMin;
+    public $countMin;
 
     /**
     * @var
     */
-    protected $countMax;
+    public $countMax;
 
     /**
     *

@@ -14,7 +14,7 @@ class UserGenderScope extends AbstractScope
     /**
     * @var
     */
-    protected $gender;
+    public $gender;
 
     /**
     *

@@ -15,12 +15,12 @@ class UserAgeBetweenScope extends AbstractScope
     /**
     * @var
     */
-    protected $minAge;
+    public $minAge;
 
     /**
     * @var
     */
-    protected $maxAge;
+    public $maxAge;
 
     /**
     *
