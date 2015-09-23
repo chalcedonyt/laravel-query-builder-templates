@@ -65,8 +65,7 @@ abstract class AbstractScope implements ScopeInterface
     public function toArray()
     {
         $public_properties = call_user_func('get_object_vars', $this);
-        $data = [ get_class($this) => $public_properties ];
-        return json_decode( $data, true );
+        return $public_properties;
     }
 }
 ?>

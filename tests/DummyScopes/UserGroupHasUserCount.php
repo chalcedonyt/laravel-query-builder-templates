@@ -14,7 +14,7 @@ class UserGroupHasUserCountScope extends AbstractScope
     /**
     * @var
     */
-    protected $minUserCount;
+    public $minUserCount;
 
     /**
     *

@@ -13,6 +13,8 @@ use DummyTemplates\PostTemplateFactory;
 use Illuminate\FileSystem\Filesystem;
 use Illuminate\FileSystem\ClassFinder;
 
+use Chalcedonyt\QueryBuilderTemplate\Scopes\ScopeFactory;
+
 class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
 {
 
@@ -55,6 +57,7 @@ class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
     {
         $factory = new PostTemplateFactory();
         $template = $factory -> create();
+
         //all
         $this -> assertEquals( $this -> numberOfResults( $template ), 40 );
 
@@ -86,12 +89,48 @@ class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
         $template -> generate();
     }
 
+    //test the creation of scope from an array input ( and vice versa )
+    public function testScopeFactory()
+    {
+        // test case 1: test the translation of array input into query builder scope
+        $template_factory = new PostTemplateFactory();
+        $original_scope = new PostIsMaxDaysOldScope(5);
+        $template = $template_factory -> create();
+        $template -> addRequired( $original_scope );
+
+        $provided_input = ['daysOld' => 5];
+        $expected_result = $this -> numberOfResults( $template );
+
+        $this -> translateArrayToScope( $provided_input, $expected_result );
+
+        // test case 2: test the translation of query builder scope into array output        
+        $provided_input = $original_scope;
+        $expected_result = ['daysOld' => 5];
+
+        $this -> translateScopeToArray($provided_input, $expected_result);
+    }
+
+    private function translateArrayToScope( $provided_input, $expected_result )
+    {
+        $scope_factory = new ScopeFactory(PostIsMaxDaysOldScope::class, $provided_input);
+        $scope = $scope_factory -> create();
+
+        $template_factory = new PostTemplateFactory();
+        $template = $template_factory -> create();
+        $template -> addRequired( $scope );
+
+        $this -> assertEquals( $this -> numberOfResults( $template ), $expected_result );
+    }
+
+    private function translateScopeToArray( $provided_input, $expected_result )
+    {
+        $this -> assertEquals( $provided_input -> toArray(), $expected_result );
+    }
+
     private function numberOfResults( $template )
     {
         return count($template -> generate() -> get() );
     }
-
-
 
 }
 
