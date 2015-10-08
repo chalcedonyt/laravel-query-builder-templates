@@ -4,7 +4,8 @@
 namespace {{$namespace}};
 
 use Chalcedonyt\QueryBuilderTemplate\Templates\Factory\AbstractTemplateFactory;
-
+use DB;
+use Illuminate\Database\Query\JoinClause;
 class {{$classname}} extends AbstractTemplateFactory
 {
 @if (count($parameters))
