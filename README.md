@@ -8,7 +8,7 @@ Generally, Eloquent/Specification patterns/Repositories/ should be used on small
 
 Installation is only via Git for now as this isn't ready for Packagist yet. Edit your `composer.json`, adding this under `require`:
 ```
-"chalcedonyt/laravel-query-builder-templates": "~0.1"
+"chalcedonyt/laravel-query-builder-templates": "~0.*"
 ```
 
 Create a `repositories` entry if it doesn't exist to tell Composer to load the library from Git:
@@ -253,16 +253,17 @@ $template = $factory -> create();
 $young_scope = new UserAgeBetweenScope(20, 30);
 $template -> addRequired($young_scope);
 //all Posts with Users between 20 and 30 years of age. Automatically joins the user table.
-$query = $template -> generate();
+$query = $template -> getBuilder();
 
 //all Posts within the past week with Users between 20 and 30 years of age
 $post_age_scope = new PostIsMaxDaysOldScope(7);
 $template -> addRequired($post_age_scope);
-$query = $template -> generate();
+$query = $template -> getBuilder();
 ```
 ## Change log
 
 * 0.1 Initial attempt. OR queries still not working very well.
+* 0.11 Renamed generate() to getBuilder();
 
 ## Roadmap
 
