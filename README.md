@@ -264,7 +264,7 @@ $query = $template -> getBuilder();
 
 * 0.1 Initial attempt. OR queries still not working very well.
 * 0.11 Renamed generate() to getBuilder();
-
+* 0.22 Remove --directory and --namespace options when generating Templates/Scopes. You can now create a Template or Scope inside a directory by specifying it in the classname, e.g. `php artisan query:make:scope MyScopeDir\\MyScope`
 ## Roadmap
 
 * Add blocks for "OR" and "AND".

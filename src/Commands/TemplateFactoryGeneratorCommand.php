@@ -22,7 +22,7 @@ class TemplateFactoryGeneratorCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'query:make:template {classname} {--directory= : The directory for QueryBuilderTemplate} {--namespace= : The namespace for QueryBuilderTemplate} {--parameters : Whether to create a factory with parameters}';
+    protected $signature = 'query:make:template {classname} {--parameters : Whether to create a factory with parameters}';
 
     /**
      * The console command description.
@@ -70,15 +70,19 @@ class TemplateFactoryGeneratorCommand extends Command
     public function handle()
     {
         try {
-
             // replace all space after ucwords
             $classname = preg_replace('/\s+/', '', ucwords($this->argument('classname')));
-
+            $namespace = $this->config->get('query_builder_template.namespace').'\\Templates\\Factory';
+            $directory = $this->appPath($this->config->get('query_builder_template.directory')).DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'Factory';
 
             //retrieves store directory configuration
-            $directory = $this->option('directory') ? $this->appPath($this->option('directory')) : $this->appPath($this->config->get('query_builder_template.directory')).DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'Factory';
-            //retrieves namespace configuration
-            $namespace = $this->option('namespace') ? $this->option('namespace') : $this->config->get('query_builder_template.namespace').'\\Templates\\Factory';
+            if( strpos($classname, '\\') !== false ){
+                $class_dirs = substr($classname, 0, strrpos( $classname, '\\'));
+                $directory = $directory.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, $class_dirs);
+                $namespace = $namespace.'\\'.$class_dirs;
+                $classname = substr($classname, strrpos($classname, '\\') + 1);
+            }
+
 
             is_dir($directory) ?: $this->file->makeDirectory($directory, 0755, true);
 
