@@ -106,12 +106,18 @@ class Template implements TemplateInterface
     {
         return $this -> add( $scope, self::MODIFIER_REQUIRED);
     }
-
+    
+    /**
+     * Alias for getBuilder
+     */
+    public function generate(){
+        return $this -> getBuilder();
+    }
     /**
      * Resolves all the ScopeInterface items into the current Builder.
      * @return \Illuminate\Database\Query\Builder $query
      */
-    public function generate(){
+    public function getBuilder(){
         $this -> query = clone $this -> baseQuery;
         //apply all direct scopes to the query.
         $this -> directScopes -> each( function( $scope ){
