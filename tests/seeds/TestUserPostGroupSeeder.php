@@ -41,18 +41,33 @@ class TestUserPostGroupSeeder extends Seeder
 
         //create 2 posts for each user. half of them from one week ago, half of them one month ago
         $users = DB::table('test_users') -> get();
-        foreach( $users as $user )
+        foreach( $users as $key => $user )
         {
-            \DB::table('test_posts') -> insert([
+            // To set a predefined number of views for each of the user's post
+            if( $key <= 2 ) {
+                $views = 0; // 3 users will be having posts with completely zero views
+            } else {
+                if ( $key > 2 && $key <= 8 ) {
+                    $views = $faker -> numberBetween(1, 49); // 6 users will be having posts with views between 1 to 29
+                } else {
+                    $views = $faker -> numberBetween(50, 100); // 11 users will be having posts with views between 50 to 100
+                }
+            }
+
+            $data = [                
                 [
                     'user_id' => $user -> id,
                     'title' => $faker -> sentence,
+                    'views' => $views,
                     'created_at' => $faker -> dateTimeBetween('-7 days','-1 day') -> format('Y-m-d H:i:s')
                 ],
                 [   'user_id' => $user -> id,
                     'title' => $faker -> sentence,
+                    'views' => $views,
                     'created_at' => $faker -> dateTimeBetween('-12 days','-8 day') -> format('Y-m-d H:i:s')]
-            ]);
+            ];
+            
+            \DB::table('test_posts') -> insert($data);
         }
 
         //create 3 groups
