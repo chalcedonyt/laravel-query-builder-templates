@@ -21,6 +21,13 @@ interface TemplateInterface
     public function add( ScopeInterface $scope, $method = '' );
 
     /**
+     * Adds a scope to the buffer, such as "having", "group by", or any other blocks that couldn't be fulfilled by addRequired() and addOptional()
+     * @param ScopeInterface $scope
+     * @return TemplateInterface $this
+     */
+    public function addDirect(ScopeInterface $scope);
+
+    /**
      * Adds a scope to the buffer, to be wrapped in an orWhere block
      * @param ScopeInterface $scope
      * @return TemplateInterface $this

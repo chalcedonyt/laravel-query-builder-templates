@@ -8,6 +8,7 @@ use DummyScopes\UserGroupScope;
 use DummyScopes\UserPostCountBetweenScope;
 use DummyScopes\PostIsMaxDaysOldScope;
 use DummyScopes\InvalidScopeTest;
+use DummyScopes\PostHavingMinimumViewScope;
 
 use DummyTemplates\PostTemplateFactory;
 use Illuminate\FileSystem\Filesystem;
@@ -53,6 +54,15 @@ class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
         }
     }
 
+    /**
+     * Testing the addRequired() function
+     *
+     * Query generated: 
+     * SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
+     * ("test_users"."gender" = ?) AND 
+     * ("test_posts"."created_at" <= ?)
+     *
+     */
     public function testRequired()
     {
         $factory = new PostTemplateFactory();
@@ -76,6 +86,64 @@ class QueryBuilderTemplateTest extends Orchestra\Testbench\TestCase
         $this -> assertEquals( $this -> numberOfResults( $template ), 5 );
 
     }
+
+    /**
+     * Testing the addOptional() function
+     *
+     * Query generated: 
+     * SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
+     * (
+     *      ("test_users"."gender" = ?) OR ("test_posts"."created_at" <= ?)
+     * )
+     */
+    public function testOptional()
+    {
+        $factory = new PostTemplateFactory();
+        $template = $factory -> create();
+
+        //all
+        $this -> assertEquals( $this -> numberOfResults( $template ), 40 );
+
+        //10 young users*2
+        $young_scope = new UserAgeBetweenScope(20, 30);
+        $template -> addRequired($young_scope);
+        $this -> assertEquals( $this -> numberOfResults( $template ), 20 );
+
+        //5 male young users*2
+        $male_scope = new UserGenderScope(1);
+        $template -> addOptional($male_scope);
+        $this -> assertEquals( $this -> numberOfResults( $template ), 10 );
+
+        $post_age_scope = new PostIsMaxDaysOldScope(7);
+        $template -> addOptional($post_age_scope);
+        $this -> assertEquals( $this -> numberOfResults( $template ), 15 );
+
+    }
+
+    /**
+     * Testing the addDirect() function
+     *
+     * Query generated: 
+     * SELECT `test_posts`.* FROM `test_posts` INNER JOIN `test_users` ON `test_users`.`id` = `test_posts`.`user_id` 
+     * GROUP BY `test_users`.`id` HAVING `test_posts`.`views` >= ?
+     *
+     */
+    public function testDirect()
+    {
+        $factory = new PostTemplateFactory();
+        $template = $factory -> create();
+
+        /**
+         * We have a total of 20 users
+         * 3 users are having posts with completely 0 views
+         * 6 users are having posts with views between 1 to 29
+         * 11 users are having posts with views between 50 to 100
+         */
+
+        $second_minimum_view_scope = new PostHavingMinimumViewScope(50);
+        $template -> addDirect($second_minimum_view_scope);
+        $this -> assertEquals( $this -> numberOfResults( $template ), 11 );
+    }    
 
     //when a scope is added with a Join request that the template cannot handle
     public function testJoinInvalidScope()

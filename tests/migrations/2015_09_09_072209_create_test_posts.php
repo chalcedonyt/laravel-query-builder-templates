@@ -16,6 +16,7 @@ class CreateTestPosts extends Migration
             $table->increments('id');
             $table->string('user_id');
             $table->string('title');
+            $table->integer('views');
             $table -> dateTime('created_at');
         });
     }
