@@ -260,6 +260,47 @@ $post_age_scope = new PostIsMaxDaysOldScope(7);
 $template -> addRequired($post_age_scope);
 $query = $template -> getBuilder();
 ```
+
+## Adding A Scope to the Template
+
+As illustrated by the above example, a scope can be added to the template factory with:
+* **$template -> addRequired( $scope );**
+    
+    Sub-queries will be wrapped in a 'WHERE ... AND' block
+    ```
+SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
+("test_users"."gender" = ?) AND 
+("test_posts"."created_at" <= ?)
+    ```
+
+Additionally, there are 2 more available options which can be used:
+* **$template -> addOptional( $scope );**
+    
+    Sub-queries will be wrapped in a 'WHERE ... OR' block
+    ```
+SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
+(
+    ("test_users"."gender" = ?) OR ("test_posts"."created_at" <= ?)
+)
+    ```    
+    
+* **$template -> addDirect( $scope );**
+    
+    Use this if you decided to run some clauses such as 'GROUP BY ... HAVING' in your Scope class, for example:
+    ```
+public function apply( \Illuminate\Database\Query\Builder $query )
+{        
+        return $query -> groupBy('test_users.id')
+                      -> having('test_posts.views', '>=', $this -> views);
+}
+    ``` 
+    The generated SQL query would be:
+    ```
+SELECT ... FROM ...
+GROUP BY `test_users`.`id` 
+HAVING `test_posts`.`views` >= ?
+    ```
+       
 ## Change log
 
 * 0.1 Initial attempt. OR queries still not working very well.

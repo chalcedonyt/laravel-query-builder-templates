@@ -9,6 +9,17 @@ abstract class AbstractScope implements ScopeInterface
     protected $tables = [];
 
     /**
+     * Types of function to be invoked from Query Builder Template Factory
+     * Choices: 'required', 'optional', 'direct'
+     * $template -> addRequired( $scope )
+     * $template -> addOptional( $scope )
+     * $template -> addDirect( $scope )
+     *
+     * This can be overridden by the child class, default is set to be 'required'
+     */
+    protected $scopeOperator = 'required';
+
+    /**
      * Apply the changes to a Builder object
      * @param \Illuminate\Database\Query\Builder $query
      * @return \Illuminate\Database\Query\Builder $query
@@ -67,5 +78,9 @@ abstract class AbstractScope implements ScopeInterface
         $public_properties = call_user_func('get_object_vars', $this);
         return $public_properties;
     }
+
+    public function getScopeOperator()
+    {
+        return $this -> scopeOperator;
+    }    
 }
-?>
