@@ -266,51 +266,51 @@ $query = $template -> getBuilder();
 As illustrated by the above example, a scope can be added to the template factory with:
 * **$template -> addRequired( $scope );**
     
-    Sub-queries will be wrapped in a 'WHERE ... AND' block
-    ```
+Sub-queries will be wrapped in a 'WHERE ... AND' block
+```
 SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
 ("test_users"."gender" = ?) AND 
 ("test_posts"."created_at" <= ?)
-    ```
+```
 
 Additionally, there are 2 more available options which can be used:
 * **$template -> addOptional( $scope );**
     
-    Sub-queries will be wrapped in a 'WHERE ... OR' block
-    ```
+Sub-queries will be wrapped in a 'WHERE ... OR' block
+```
 SELECT ... WHERE ("test_users"."dob" <= ? AND "test_users"."dob" >= ?) AND 
 (
     ("test_users"."gender" = ?) OR ("test_posts"."created_at" <= ?)
 )
-    ```    
+```    
     
 * **$template -> addDirect( $scope );**
-    
-    Use this if you decided to run some clauses such as 'GROUP BY ... HAVING' in your Scope class, for example:
-    ```
+
+Use this if you decided to run some clauses such as 'GROUP BY ... HAVING' in your Scope class, for example:
+```
 public function apply( \Illuminate\Database\Query\Builder $query )
 {        
         return $query -> groupBy('test_users.id')
                       -> having('test_posts.views', '>=', $this -> views);
 }
-    ``` 
-    The generated SQL query would be:
-    ```
+``` 
+The generated SQL query would be:
+```
 SELECT ... FROM ...
 GROUP BY `test_users`.`id` 
 HAVING `test_posts`.`views` >= ?
-    ```
+```
        
 ## Change log
 
 * 0.1 Initial attempt. OR queries still not working very well.
 * 0.11 Renamed generate() to getBuilder();
 * 0.22 Remove --directory and --namespace options when generating Templates/Scopes. You can now create a Template or Scope inside a directory by specifying it in the classname, e.g. `php artisan query:make:scope MyScopeDir\\MyScope`
+
 ## Roadmap
 
 * Add blocks for "OR" and "AND".
 * Add solution for inverting scopes ("NOT")
-
 
 ## Credits
 
