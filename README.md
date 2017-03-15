@@ -17,12 +17,12 @@ Create a `repositories` entry if it doesn't exist to tell Composer to load the l
 	{
 		"packagist": false,
 		"type": "git",
-		"url": "https://github.com/chalcedonyt/laravel-query-builder-templates.git"
+		"url": "https://github.com/simmatrix/laravel-query-builder-templates.git"
     }]
 ```
 
 
-Then run `composer update`. Once composer is finished, add the service provider to the `providers` array in `app/config/app.php`:
+Then run `composer update chalcedonyt/laravel-query-builder-templates`. Once composer is finished, add the service provider to the `providers` array in `app/config/app.php`:
 ```
 Chalcedonyt\QueryBuilderTemplate\Providers\QueryBuilderTemplateServiceProvider::class
 ```
